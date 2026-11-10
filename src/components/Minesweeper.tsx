@@ -92,11 +92,12 @@ function reveal(board: Cell[], start: number, size: number): Cell[] {
 
 function Minesweeper() {
   const [difficulty, setDifficulty] = useState<Difficulty>('easy')
+  const [mineCount, setMineCount] = useState(levels.easy.mines)
   const [board, setBoard] = useState(() => emptyBoard(levels.easy.size))
   const [status, setStatus] = useState<GameStatus>('ready')
   const [seconds, setSeconds] = useState(0)
-  const { size, mines } = levels[difficulty]
-  const flagsLeft = mines - board.filter((cell) => cell.flagged).length
+  const { size } = levels[difficulty]
+  const flagsLeft = mineCount - board.filter((cell) => cell.flagged).length
 
   useEffect(() => {
     if (status !== 'playing') return
@@ -104,18 +105,24 @@ function Minesweeper() {
     return () => window.clearInterval(timer)
   }, [status])
 
-  function reset(nextDifficulty = difficulty) {
+  function reset(nextDifficulty = difficulty, nextMineCount = mineCount) {
     setDifficulty(nextDifficulty)
+    setMineCount(nextMineCount)
     setBoard(emptyBoard(levels[nextDifficulty].size))
     setStatus('ready')
     setSeconds(0)
+  }
+
+  function changeMineCount(value: number) {
+    if (!Number.isInteger(value) || value < 1 || value >= size * size) return
+    reset(difficulty, value)
   }
 
   function openCell(index: number) {
     if (status === 'won' || status === 'lost' || board[index].flagged || board[index].revealed) return
 
     const workingBoard = status === 'ready'
-      ? createBoard(size, mines, index, board)
+      ? createBoard(size, mineCount, index, board)
       : board
     const next = reveal(workingBoard, index, size)
 
@@ -131,7 +138,7 @@ function Minesweeper() {
 
     const revealedSafeCells = next.filter((cell) => cell.revealed && !cell.mine).length
     setBoard(next)
-    setStatus(revealedSafeCells === size * size - mines ? 'won' : 'playing')
+    setStatus(revealedSafeCells === size * size - mineCount ? 'won' : 'playing')
   }
 
   function toggleFlag(index: number) {
@@ -164,13 +171,27 @@ function Minesweeper() {
             <span>Nehézség</span>
             <select
               value={difficulty}
-              onChange={(event) => reset(event.target.value as Difficulty)}
+              onChange={(event) => {
+                const nextDifficulty = event.target.value as Difficulty
+                reset(nextDifficulty, levels[nextDifficulty].mines)
+              }}
               aria-label="Nehézségi fokozat"
             >
               {Object.entries(levels).map(([key, level]) => (
                 <option key={key} value={key}>{level.label}</option>
               ))}
             </select>
+          </label>
+          <label className="difficulty-control mine-count-control">
+            <span>Bombák száma</span>
+            <input
+              type="number"
+              min={1}
+              max={size * size - 1}
+              value={mineCount}
+              onChange={(event) => changeMineCount(event.currentTarget.valueAsNumber)}
+              aria-label="Bombák száma"
+            />
           </label>
           <button className="restart-button" type="button" onClick={() => reset()}>
             Új játék
