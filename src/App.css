@@ -36,8 +36,8 @@
 .stat-item strong { min-width: 27px; padding: 3px 4px; color: white; background: var(--ink); border-radius: 4px; font-family: Consolas, monospace; font-size: 13px; letter-spacing: 0; }
 .mood-indicator { display: grid; place-items: center; width: 36px; height: 36px; background: #fffdf4; border: 1px solid #e4d8ac; border-radius: 50%; font-size: 21px; }
 .board-scroll { max-width: 100%; overflow-x: auto; }
-.mine-board { --board-size: 9; display: grid; grid-template-columns: repeat(var(--board-size), 10px); width: max-content; gap: 3px; padding: 7px; background: #d7e5df; border: 1px solid #c4d6ce; border-radius: 7px; user-select: none; touch-action: manipulation; }
-.mine-cell { display: grid; place-items: center; width: 10px; height: 10px; padding: 0; color: var(--ink); background: #f9fcf8; border: 1px solid #d5e4dc; border-radius: 2px; box-shadow: inset 0 -1px 0 rgba(90, 130, 113, .1); font-family: Consolas, monospace; font-size: 8px; font-weight: 800; line-height: 1; cursor: pointer; transition: background .12s, transform .12s; }
+.mine-board { --board-size: 9; display: grid; grid-template-columns: repeat(var(--board-size), 30px); width: max-content; gap: 3px; padding: 7px; background: #d7e5df; border: 1px solid #c4d6ce; border-radius: 7px; user-select: none; touch-action: manipulation; }
+.mine-cell { display: grid; place-items: center; width: 30px; height: 30px; padding: 0; color: var(--ink); background: #f9fcf8; border: 1px solid #d5e4dc; border-radius: 3px; box-shadow: inset 0 -2px 0 rgba(90, 130, 113, .1); font-family: Consolas, monospace; font-size: 15px; font-weight: 800; line-height: 1; cursor: pointer; transition: background .12s, transform .12s; }
 .mine-cell:not(.revealed):hover:not(:disabled) { background: #fff; transform: translateY(-1px); }
 .mine-cell.revealed { background: #e9f1ed; border-color: #e1ebe5; box-shadow: none; cursor: default; }
 .mine-cell.flagged { color: var(--coral); background: #fff8f1; }
